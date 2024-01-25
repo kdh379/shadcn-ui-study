@@ -28,7 +28,9 @@ export default function Provider( props: PropsWithChildren ) {
                 <Sidebar collapsed={collapsed} />
             </ResizablePanel>
             <ResizableHandle withHandle className="hidden xl:flex"/>
-            <ResizablePanel>
+            <ResizablePanel
+                defaultSize={50}
+            >
                 <div className="flex-1">{props.children}</div>
             </ResizablePanel>
         </ResizablePanelGroup>

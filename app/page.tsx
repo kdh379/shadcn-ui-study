@@ -1,7 +1,33 @@
+"use client";
+
 import Link from "next/link"
 
 import { siteConfig } from "@/config/site"
-import { buttonVariants } from "@/components/ui/button"
+import { Button, buttonVariants } from "@/components/ui/button"
+import Combobox from "@/components/ui/combobox"
+
+const frameworks = [
+  {
+    value: "next.js",
+    label: "Next.js",
+  },
+  {
+    value: "sveltekit",
+    label: "SvelteKit",
+  },
+  {
+    value: "nuxt.js",
+    label: "Nuxt.js",
+  },
+  {
+    value: "remix",
+    label: "Remix",
+  },
+  {
+    value: "astro",
+    label: "Astro",
+  },
+]
 
 export default function IndexPage() {
   return (
@@ -33,6 +59,18 @@ export default function IndexPage() {
         >
           GitHub
         </Link>
+        <Combobox
+          itemList={frameworks}
+          renderItem={(item) => 
+            <div className="flex">
+              <span>{item.label}</span>
+            </div>
+          }
+        >
+          <Button variant="outline">
+            combobox
+          </Button>
+        </Combobox>
       </div>
     </section>
   )
