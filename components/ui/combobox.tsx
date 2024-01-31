@@ -1,19 +1,30 @@
 "use client";
 
 import { PropsWithChildren, useState } from "react";
-import { CommandEmpty, CommandGroup, CommandItem, Command as CommandPrimitive } from "cmdk"
-import { Popover } from "./popover";
-import { PopoverContent, PopoverTrigger } from "@radix-ui/react-popover";
-import { Command } from "./command";
-import { CommandInput } from "cmdk";
-import { Button } from "./button";
+import {
+    Command,
+    CommandEmpty,
+    CommandGroup,
+    CommandInput,
+    CommandItem,
+} from "@/components/ui/command"
+import {
+    Popover,
+    PopoverContent,
+    PopoverTrigger,
+} from "@/components/ui/popover"
+import * as PopoverPrimitive from "@radix-ui/react-popover"
+import { Command as CommandPrimitive } from "cmdk"
 
-interface ComboboxProps<T> extends React.ComponentProps<typeof CommandPrimitive.Input> {
+interface ComboboxProps<T> extends 
+    React.ComponentProps<typeof CommandPrimitive.Input>,
+    Pick<PopoverPrimitive.PopoverContentProps, "side" | "align">{
     itemList: Item<T>[];
-    renderItem: ( item: Item<T> ) => React.ReactNode;
+    renderItem: ( item: Item<T>, active: boolean ) => React.ReactNode;
 
-    onChange?: ( value: Item<T> ) => void;
+    className?: string;
     emptyMessage?: string;
+    onChange?: ( item: Item<T> ) => void;
 }
 
 type Item<T> = {
@@ -21,15 +32,24 @@ type Item<T> = {
 } & T;
 
 export default function Combobox<T>(props: PropsWithChildren<ComboboxProps<T>>) {
-    const { itemList, emptyMessage = "", renderItem, ...inputProps } = props;
+    const {
+        itemList,
+        className,
+        children,
+        emptyMessage = "",
+        side = "bottom",
+        align = "start",
+        renderItem,
+        ...inputProps } = props;
 
     const [open, setOpen] = useState(false);
+    const [selectedItem, setSelectedItem] = useState<Item<T> | null>(null);
 
     return <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
-            <Button></Button>
+            {children}
         </PopoverTrigger>
-        <PopoverContent>
+        <PopoverContent className={className}  side={side} align={align}>
             <Command>
                 <CommandInput {...inputProps}  />
                 <CommandEmpty>{emptyMessage}</CommandEmpty>
@@ -38,12 +58,13 @@ export default function Combobox<T>(props: PropsWithChildren<ComboboxProps<T>>) 
                         <CommandItem
                             key={index}
                             value={item.value}
-                            onSelect={(currentValue) => {
+                            onSelect={() => {
                                 setOpen(false);
+                                setSelectedItem(item);
                                 props.onChange?.(item);
                             }}
                         >
-                            {renderItem(item)}
+                            {renderItem(item, selectedItem === item)}
                         </CommandItem>
                     )}
                 </CommandGroup>

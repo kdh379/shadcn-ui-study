@@ -5,6 +5,8 @@ import Link from "next/link"
 import { siteConfig } from "@/config/site"
 import { Button, buttonVariants } from "@/components/ui/button"
 import Combobox from "@/components/ui/combobox"
+import { cn } from "@/lib/utils";
+import { CheckIcon, ChevronsUpDown } from "lucide-react";
 
 const frameworks = [
   {
@@ -61,14 +63,18 @@ export default function IndexPage() {
         </Link>
         <Combobox
           itemList={frameworks}
-          renderItem={(item) => 
-            <div className="flex">
+          className="w-56 p-0"
+          placeholder="Search Framework..."
+          renderItem={(item, active) => 
+            <div className="flex w-full items-center">
               <span>{item.label}</span>
+              <CheckIcon className={cn("ml-auto size-4", active ? "visible" : "invisible")} />
             </div>
           }
         >
-          <Button variant="outline">
-            combobox
+          <Button variant="outline" className="flex w-40 items-center">
+            <span>combobox</span>
+            <ChevronsUpDown className="ml-auto size-4" />
           </Button>
         </Combobox>
       </div>
